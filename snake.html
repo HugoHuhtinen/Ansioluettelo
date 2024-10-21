@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #52a133, #3fafd1);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            border-spacing: 0;
+            margin: 20px auto;
+            background-color: #2c3e50;
+        }
+
+        td {
+            width: 15px;
+            height: 15px;
+            border: 1px solid #ccc;
+        }
+
+        #gameArea {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="button"] {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="button"]:hover {
+            background-color: #c0392b;
+        }
+
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+
+        .setting-label {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        #settings {
+            margin-top: 10px;
+        }
+
+        #settingsToggle {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        #settingsToggle:hover {
+            text-decoration: underline;
+        }
+
+        .settings-container {
+            background-color: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        var x = 0, y = 0, direction = 2, length = 5;
+        var xPos = [], yPos = [];
+        var gameInterval;
+        var width = 32, height = 32;
+        var foodX = [], foodY = [], score = 0, foodCount = 3;
+        var isRunning = false;
+        var borderOn = true;
+
+        function onLoad() {
+            document.getElementById("startPauseBtn").value = "Start";
+            document.getElementById("settings").style.display = "none";
+            setMapSize(); // Adjust map size
+            resetGame();
+        }
+
+        function resetGame() {
+            clearTimeout(gameInterval);
+            for (var i = 0; i < width; i++) {
+                for (var j = 0; j < height; j++) {
+                    getCell(i, j).style.backgroundColor = "#2c3e50";
+                }
+            }
+            score = 0;
+            document.getElementById("score").innerHTML = score.toString();
+            for (var i = 0; i <= length; i++) {
+                xPos[i] = i;
+                yPos[i] = 0;
+            }
+            x = length;
+            y = 0;
+            direction = 2;
+            isRunning = false;
+
+            for (var i = 0; i < foodCount; i++) {
+                foodX[i] = width - 1;
+                foodY[i] = height - 1;
+                placeFood(i);
+            }
+            drawSnake(); // Draw the initial snake position
+        }
+
+        function setMapSize() {
+            var size = document.querySelector('input[name="mapSize"]:checked').value;
+            switch (size) {
+                case "small":
+                    width = 16; height = 16;
+                    break;
+                case "medium":
+                    width = 24; height = 24;
+                    break;
+                case "large":
+                    width = 32; height = 32;
+                    break;
+            }
+            redrawTable();
+            resetGame(); // Reset game after changing size
+        }
+
+        function redrawTable() {
+            var tableHTML = "";
+            for (var i = 0; i < height; i++) {
+                tableHTML += '<tr>';
+                for (var j = 0; j < width; j++) {
+                    tableHTML += "<td id='cell_" + j + "_" + i + "'></td>";
+                }
+                tableHTML += '</tr>';
+            }
+            document.getElementById("gameTable").innerHTML = tableHTML;
+        }
+
+        function getCell(x, y) {
+            return document.getElementById("cell_" + x + "_" + y);
+        }
+
+        function checkGame() {
+            if (!isRunning) return;
+            gameInterval = setTimeout(checkGame, 100);
+            moveSnake();
+        }
+
+        function moveSnake() {
+            getCell(xPos[0], yPos[0]).style.backgroundColor = "#2c3e50";
+
+            switch (direction) {
+                case 1: x -= 1; break; // Move left
+                case 2: x += 1; break; // Move right
+                case 3: y -= 1; break; // Move up
+                case 4: y += 1; break; // Move down
+            }
+
+            for (var i = 0; i < length; i++) {
+                xPos[i] = xPos[i + 1];
+                yPos[i] = yPos[i + 1];
+                if (x == xPos[i] && y == yPos[i]) gameOver();
+            }
+
+            if (borderOn) {
+                if (x < 0 || y < 0 || x >= width || y >= height) {
+                    gameOver();
+                    return;
+                }
+            } else {
+                x = (x + width) % width;
+                y = (y + height) % height;
+            }
+
+            for (var i = 0; i < foodCount; i++) {
+                if (x == foodX[i] && y == foodY[i]) {
+                    score++;
+                    length++;
+                    placeFood(i);
+                    break;
+                }
+            }
+
+            xPos[length] = x;
+            yPos[length] = y;
+            getCell(x, y).style.backgroundColor = "#27ae60"; // Snake color
+        }
+
+        function gameOver() {
+            clearTimeout(gameInterval);
+            alert("You lost");
+            document.getElementById("startPauseBtn").value = "Start";
+            resetGame();
+        }
+
+        function placeFood(i) {
+            foodCount = document.getElementById("Pist").value;
+            document.getElementById("score").innerHTML = score.toString();
+            getCell(foodX[i], foodY[i]).style.backgroundColor = "#2c3e50";
+            var newX, newY;
+
+            do {
+                newX = Math.floor(Math.random() * width);
+                newY = Math.floor(Math.random() * height);
+            } while (foodX.includes(newX) && foodY.includes(newY) || xPos.includes(newX) && yPos.includes(newY));
+
+            foodX[i] = newX;
+            foodY[i] = newY;
+            getCell(foodX[i], foodY[i]).style.backgroundColor = "#e74c3c"; // Food color
+        }
+
+        function toggleSettings() {
+            var settings = document.getElementById("settings");
+            var toggleButton = document.getElementById("settingsToggle");
+            if (settings.style.display == "none") {
+                settings.style.display = "";
+                toggleButton.innerHTML = "Hide settings";
+            } else {
+                settings.style.display = "none";
+                toggleButton.innerHTML = "Show settings";
+            }
+        }
+
+        function startPauseGame() {
+            if (isRunning) {
+                document.getElementById("startPauseBtn").value = "Resume";
+                clearTimeout(gameInterval);
+                isRunning = false;
+            } else {
+                document.getElementById("startPauseBtn").value = "Pause";
+                isRunning = true;
+                checkGame();
+            }
+        }
+
+        function toggleBorders() {
+            borderOn = document.getElementById("borderToggle").checked;
+        }
+
+        document.addEventListener("keydown", function (event) {
+            switch (event.key.toLowerCase()) {
+                case "a":
+                    if (direction != 2) direction = 1; // Move left
+                    break;
+                case "d":
+                    if (direction != 1) direction = 2; // Move right
+                    break;
+                case "w":
+                    if (direction != 4) direction = 3; // Move up
+                    break;
+                case "s":
+                    if (direction != 3) direction = 4; // Move down
+                    break;
+            }
+        });
+    </script>
+</head>
+
+<body onload="onLoad();">
+    <h1>Snake Game</h1>
+    <div id="gameArea">
+        <table id="gameTable" border="1"></table>
+        <div>
+            <p id="score">0</p>
+            <input type="button" value="Start" id="startPauseBtn" onclick="startPauseGame();" />
+            <a href="javascript:toggleSettings();" id="settingsToggle">Show settings</a>
+        </div>
+        <div id="settings" class="settings-container">
+            <p class="setting-label">Apples: <input type="text" id="Pist" value="4" onchange="resetGame()" /></p>
+            <p class="setting-label">Map Size:</p>
+            <label><input type="radio" name="mapSize" value="small" onclick="setMapSize()" /> Small</label>
+            <label><input type="radio" name="mapSize" value="medium" onclick="setMapSize()" /> Medium</label>
+            <label><input type="radio" name="mapSize" value="large" checked onclick="setMapSize()" /> Large</label>
+            <p class="setting-label">
+                <label><input type="checkbox" id="borderToggle" onclick="toggleBorders()" checked /> Borders On</label>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+}
+
+/* Header Section with Background Image */
+.hero-section {
+    height: 60vh;
+    background: url('../images/hero-bg.png') center/cover no-repeat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.hero-section .overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    text-align: center;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+}
+
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form Styling */
+.bmi-section .form-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.bmi-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* BMI Meter Styling */
+.meter {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    margin-top: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.meter div {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+    color: white;
+    padding: 0 10px;
+}
+
+#underweight {
+    background-color: #FFA07A;
+}
+
+#healthyWeight {
+    background-color: #98FB98;
+}
+
+#riskOverweight {
+    background-color: #FFD700;
+}
+
+#overweight {
+    background-color: #FF6347;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    position: relative;
+    width: 100%;
+}

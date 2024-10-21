@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your health and fitness by calculating your BMI.">
+    <title>Health and Weight Tracker</title>
+    <link rel="stylesheet" href="WeightCare/style.css">
+</head>
+
+<body>
+    <!-- Header Section with Background Image -->
+    <header class="hero-section">
+        <div class="overlay">
+            <h1>Health and Fitness Tracker</h1>
+            <p>Monitor your BMI and stay healthy!</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- BMI Form Section -->
+        <section class="bmi-section">
+            <form id="bmiForm" class="form-box">
+                <h2>Check Your BMI (Body Mass Index)</h2>
+                <label for="gender">Gender:</label>
+                <select id="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <label for="height">Height (in cm):</label>
+                <input type="number" id="height" placeholder="Enter your height" required>
+
+                <label for="weight">Weight (in kg):</label>
+                <input type="number" id="weight" placeholder="Enter your current weight" required>
+
+                <button type="button" class="btn-primary" onclick="calculateBMI()">Check Status</button>
+
+                <div class="result" id="bmiResult"></div>
+                <div class="meter" id="bmiMeter">
+                    <div id="underweight">Underweight<br><5%</div>
+                    <div id="healthyWeight">Healthy<br>5%-85%</div>
+                    <div id="riskOverweight">Risk of Overweight<br>85%-95%</div>
+                    <div id="overweight">Overweight<br>>95%</div>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Health and Fitness Tracker | All Rights Reserved</p>
+    </footer>
+
+    <script src="WeightCare/script.js"></script>
+</body>
+
+</html>
